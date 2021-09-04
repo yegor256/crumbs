@@ -49,44 +49,42 @@
   \fi
 }
 
-\let\oldsection\section
-\renewcommand\section[1]{
-  \ifx\crumbs\empty
-    \appendtofile{\jobname.crumbs}{
-      \back ifx \back crumbs \back empty
-        \back gappto \back crumbs{\back setcounter{crumbi}{0}}
-      \back fi
-      \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{#1}}
-    }
-  \fi
-  \oldsection{#1}
-}
-
-\let\oldsubsection\subsection
-\renewcommand\subsection[1]{
-  \ifx\crumbs\empty
-    \appendtofile{\jobname.crumbs}{
-      \back ifcsname crumbs\romannumeral\the\value{section}\back endcsname\back else
-        \back expandafter\back newcommand\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
-          \back setcounter{subcrumbi}{0}
-        }
-      \back fi
-      \back expandafter\back gappto\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
-        \back stepcounter{subcrumbi}
-        \back subcrumb{#1}
-      }
-    }
-  \fi
-  \oldsubsection{#1}
-}
-
 \newcommand\crumb[1]{#1}
 \newcommand\subcrumb[1]{#1}
 \newcommand*\crumbs{}
 \newcounter{crumbi}
 \newcounter{subcrumbi}
 \AtBeginDocument{
-  \IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}
+  \let\oldsection\section%
+  \renewcommand\section[1]{
+    \ifx\crumbs\empty
+      \appendtofile{\jobname.crumbs}{
+        \back ifx \back crumbs \back empty
+          \back gappto \back crumbs{\back setcounter{crumbi}{0}}
+        \back fi
+        \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{#1}}
+      }
+    \fi
+    \oldsection{#1}
+  }%
+  \let\oldsubsection\subsection
+  \renewcommand\subsection[1]{
+    \ifx\crumbs\empty
+      \appendtofile{\jobname.crumbs}{
+        \back ifcsname crumbs\romannumeral\the\value{section}\back endcsname\back else
+          \back expandafter\back newcommand\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
+            \back setcounter{subcrumbi}{0}
+          }
+        \back fi
+        \back expandafter\back gappto\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
+          \back stepcounter{subcrumbi}
+          \back subcrumb{#1}
+        }
+      }
+    \fi
+    \oldsubsection{#1}
+  }%
+  \IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}%
 }
 
 \endinput
