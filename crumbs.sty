@@ -42,8 +42,10 @@
   }
 
 \newcommand\subcrumbs{
-  \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname
-    \csname crumbs\romannumeral\the\value{section}\endcsname{}
+  \ifnum\value{section}=0\else
+    \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname
+      \csname crumbs\romannumeral\the\value{section}\endcsname{}
+    \fi
   \fi
 }
 

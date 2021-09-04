@@ -27,10 +27,10 @@
 \usepackage{crumbs}
 \usepackage{fancyhdr}
   \fancyhf{}
-  \setlength{\headheight}{1in}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand\crumb[1]{\sffamily[{\ifnum\value{section}=\value{crumbi}\color{orange}\fi#1}]\quad}
-  \renewcommand\subcrumb[1]{\sffamily[{\ifnum\value{subsection}=\value{subcrumbi}\color{orange}\fi#1}]$\;$}
+  \setlength{\headheight}{1.2in}
+  \renewcommand{\headrulewidth}{1pt}
+  \renewcommand\crumb[1]{{\sffamily[{\ifnum\value{section}=\value{crumbi}\color{orange}\fi#1}]\quad}}
+  \renewcommand\subcrumb[1]{{\sffamily[{\ifnum\value{subsection}=\value{subcrumbi}\color{orange}\fi#1}]$\;$}}
   \fancyhead[L]{
     \ff{\char`\\crumbs}: \crumbs
     \\[3pt]
@@ -54,6 +54,12 @@
 \pagestyle{fancy}
 \thispagestyle{fancy}
 
+Before the first \ff{\char`\\section} command:
+
+\ff{\char`\\crumbs}: \crumbs
+\\[3pt]
+\small\ff{\char`\\subcrumbs}: \subcrumbs
+
 \section{Introduction}
 
 This package helps you add navigation crumbs to your document,
@@ -73,6 +79,24 @@ Some text here.
 Some other text here.
 \end{document}
 \end{ffcode}
+
+You may redefine \ff{\char`\\crumb\{\}} and \ff{\char`\\subcrumb\{\}}
+commands, if you want your crumbs to look nicer, for example:
+
+\begin{ffcode}
+\renewcommand\crumb[1]{
+  {
+    \ifnum\value{section}=\value{crumbi}
+      \color{orange}
+    \fi
+    #1
+  }
+}
+\end{ffcode}
+
+The same for \ff{\char`\\subcrumb\{\}}, but the comparison should be
+done not between \ff{section} and \ff{crumbi}, but between
+\ff{subsection} and \ff{subcrumbi} counters.
 
 \subsection{How to Contribute}
 
