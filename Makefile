@@ -51,7 +51,7 @@ zip: crumbs.pdf crumbs.sty
 	cp ../../.latexmkrc .
 	latexmk -pdf crumbs.tex
 	rm .latexmkrc
-	rm -rf _minted-* *.aux *.bbl *.bcf *.blg *.fdb_latexmk *.fls *.log *.run.xml *.out *.exc
+	rm -rf _minted-* *.crumbs *.aux *.bbl *.bcf *.blg *.fdb_latexmk *.fls *.log *.run.xml *.out *.exc
 	cat crumbs.sty | grep RequirePackage | gsed -e "s/.*{\(.\+\)}.*/hard \1/" > DEPENDS.txt
 	cd ..
 	zip -r crumbs.zip *
