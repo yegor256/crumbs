@@ -23,16 +23,20 @@
 \documentclass[12pt]{article}
 \usepackage[tt=false,type1=true]{libertine}
 \usepackage{ffcode}
+\usepackage{xcolor}
 \usepackage{crumbs}
 \usepackage{fancyhdr}
   \fancyhf{}
+  \setlength{\headheight}{1in}
   \renewcommand{\headrulewidth}{0pt}
-  \renewcommand\crumb[1]{\sffamily[#1]\quad}
-  \renewcommand\subcrumb[1]{\sffamily[#1]$\;$}
+  \renewcommand\crumb[1]{\sffamily[{\ifnum\value{section}=\value{crumbi}\color{orange}\fi#1}]\quad}
+  \renewcommand\subcrumb[1]{\sffamily[{\ifnum\value{subsection}=\value{subcrumbi}\color{orange}\fi#1}]$\;$}
   \fancyhead[L]{
     \ff{\char`\\crumbs}: \crumbs
     \\[3pt]
-    \small\ff{\char`\\subcrumbs}: \subcrumbs (\the\value{section})
+    \small\ff{\char`\\subcrumbs}: \subcrumbs
+    \\[3pt]
+    \footnotesize\ttfamily section=\the\value{section}, crumbi=\the\value{crumbi}, subcrumbi=\the\value{subcrumbi}
   }
 
 \title{\ff{crumbs}: \LaTeX{} Package \\ for Navigation Crumbs}

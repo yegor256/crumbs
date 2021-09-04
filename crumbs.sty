@@ -51,6 +51,9 @@
 \renewcommand\section[1]{
   \ifx\crumbs\empty
     \appendtofile{\jobname.crumbs}{
+      \back ifx \back crumbs \back empty
+        \back gappto \back crumbs{\back setcounter{crumbi}{0}}
+      \back fi
       \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{#1}}
     }
   \fi
