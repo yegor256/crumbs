@@ -25,13 +25,9 @@
 
 \RequirePackage{etoolbox}
 
-\newcommand\subcrumbs{
-  \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname
-    \csname crumbs\romannumeral\the\value{section}\endcsname{}
-  \fi
-}
-
 % see https://tex.stackexchange.com/a/12414/1449
+\makeatletter\newcommand\back{\@backslashchar}\makeatother
+\makeatletter\newcommand\percent{\@percentchar}\makeatother
 \RequirePackage{catchfile}
   \newwrite\appendwrite
   \newcommand*\appendtofile[2]{%
@@ -45,12 +41,18 @@
     \endgroup
   }
 
-\makeatletter\newcommand\back{\@backslashchar}\makeatother
+\newcommand\subcrumbs{
+  \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname
+    \csname crumbs\romannumeral\the\value{section}\endcsname{}
+  \fi
+}
 
 \let\oldsection\section
 \renewcommand\section[1]{
   \ifx\crumbs\empty
-    \appendtofile{\jobname.crumbs}{\back TOCRUMBS{0}{#1}}
+    \appendtofile{\jobname.crumbs}{
+      \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{#1}}
+    }
   \fi
   \oldsection{#1}
 }
@@ -58,19 +60,28 @@
 \let\oldsubsection\subsection
 \renewcommand\subsection[1]{
   \ifx\crumbs\empty
-    \appendtofile{\jobname.crumbs}{\back TOCRUMBS{\the\value{section}}{#1}}
+    \appendtofile{\jobname.crumbs}{
+      \back ifcsname crumbs\romannumeral\the\value{section}\back endcsname\back else
+        \back expandafter\back newcommand\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
+          \back setcounter{subcrumbi}{0}
+        }
+      \back fi
+      \back expandafter\back gappto\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
+        \back stepcounter{subcrumbi}
+        \back subcrumb{#1}
+      }
+    }
   \fi
   \oldsubsection{#1}
 }
 
-\newcommand\TOCRUMBS[2]{
-  \ifcsname crumbs\romannumeral#1\endcsname\else
-    \expandafter\newcommand\expandafter*\csname crumbs\romannumeral#1\endcsname{}
-  \fi
-  \expandafter\gappto\csname crumbs\romannumeral#1\endcsname{#2}
-}
-
+\newcommand\crumb[1]{#1}
+\newcommand\subcrumb[1]{#1}
 \newcommand*\crumbs{}
-\IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}
+\newcounter{crumbi}
+\newcounter{subcrumbi}
+\AtBeginDocument{
+  \IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}
+}
 
 \endinput

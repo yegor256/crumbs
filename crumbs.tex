@@ -23,26 +23,34 @@
 \documentclass[12pt]{article}
 \usepackage[tt=false,type1=true]{libertine}
 \usepackage{ffcode}
-\usepackage{fancyhdr}
 \usepackage{crumbs}
-  \pagestyle{fancy}
+\usepackage{fancyhdr}
+  \fancyhf{}
   \renewcommand{\headrulewidth}{0pt}
-  \fancyhead[L]{\crumbs\newline\subcrumbs}
+  \renewcommand\crumb[1]{\sffamily[#1]\quad}
+  \renewcommand\subcrumb[1]{\sffamily[#1]$\;$}
+  \fancyhead[L]{
+    \ff{\char`\\crumbs}: \crumbs
+    \\[3pt]
+    \small\ff{\char`\\subcrumbs}: \subcrumbs (\the\value{section})
+  }
+
 \title{\ff{crumbs}: \LaTeX{} Package \\ for Navigation Crumbs}
 \author{Yegor Bugayenko}
 \date{0.0.0 00.00.0000}
+
 \begin{document}
 \pagenumbering{gobble}
 \raggedbottom
 \setlength{\parindent}{0pt}
 \setlength{\columnsep}{32pt}
 \setlength{\parskip}{6pt}
+
 \maketitle
+\pagestyle{fancy}
+\thispagestyle{fancy}
 
 \section{Introduction}
-
-[\crumbs{}]
-[\subcrumbs{}]
 
 This package helps you add navigation crumbs to your document,
 which is most useful for presentation and slide decks:
@@ -51,7 +59,9 @@ which is most useful for presentation and slide decks:
 \documentclass{article}
 \usepackage{crumbs}
 \usepackage{fancyhdr}
-\fancyhead[L]{\crumbs}
+  \fancyhf{}
+  \pagestyle{fancy}
+  \fancyhead[L]{\crumbs / \subcrumbs}
 \begin{document}
 \section{Introduction}
 Some text here.
@@ -64,5 +74,19 @@ Some other text here.
 
 More details about this package you can find
 in the \ff{yegor256/crumbs} GitHub repository.
+
+If you want to add a feature or fix a bug, you are welcome
+to submit an issue or make a pull request.
+
+\section{How It Works}
+
+On the first run, a new file \ff{\char`\\jobname.crumbs} is created,
+where all \ff{\char`\\section} and \ff{\char`\\subsection} commands
+are being logged.
+
+On the second run, the file is loaded and two commands are being
+created: \ff{\char`\\crumbs} and \ff{\char`\\subcrumbs}. The first
+one is a collection of \ff{\char`\\crumb\{\}} calls, while the second
+one is a collection of \ff{\char`\\subcrumb\{\}} ones.
 
 \end{document}
