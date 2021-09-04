@@ -49,7 +49,7 @@
   \fi
 }
 
-\let\oldsection\section%
+\let\oldsection\section
 \renewcommand\section[2][]{
   \def\temp{#1}
   \ifx\crumbs\empty
@@ -61,7 +61,8 @@
     }
   \fi
   \oldsection{#2}
-}%
+}
+
 \let\oldsubsection\subsection
 \renewcommand\subsection[2][]{
   \def\temp{#1}
@@ -79,7 +80,7 @@
     }
   \fi
   \oldsubsection{#2}
-}%
+}
 
 \newcommand\crumb[2]{#1}
 \newcommand\subcrumb[2]{#1}
