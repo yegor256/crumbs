@@ -49,8 +49,8 @@
   \fi
 }
 
-\newcommand\crumb[1]{#1}
-\newcommand\subcrumb[1]{#1}
+\newcommand\crumb[2]{#1}
+\newcommand\subcrumb[2]{#1}
 \newcommand*\crumbs{}
 \newcounter{crumbi}
 \newcounter{subcrumbi}
@@ -63,7 +63,7 @@
         \back ifx \back crumbs \back empty
           \back gappto \back crumbs{\back setcounter{crumbi}{0}}
         \back fi
-        \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{\ifx\temp\empty #2\else #1\fi}}
+        \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}
       }
     \fi
     \oldsection{#2}
@@ -80,7 +80,7 @@
         \back fi
         \back expandafter\back gappto\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
           \back stepcounter{subcrumbi}
-          \back subcrumb{\ifx\temp\empty #2\else #1\fi}
+          \back subcrumb{\ifx\temp\empty #2\else #1\fi}{#2}
         }
       }
     \fi

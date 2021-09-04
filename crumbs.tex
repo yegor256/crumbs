@@ -30,8 +30,8 @@
   \fancyhf{}
   \setlength{\headheight}{1.2in}
   \renewcommand{\headrulewidth}{1pt}
-  \renewcommand\crumb[1]{{\sffamily[{\ifnum\value{section}=\value{crumbi}\color{orange}\fi#1}]\quad}}
-  \renewcommand\subcrumb[1]{{\sffamily[{\ifnum\value{subsection}=\value{subcrumbi}\color{orange}\fi#1}]$\;$}}
+  \renewcommand\crumb[2]{{\sffamily[{\ifnum\value{section}=\value{crumbi}\color{orange}\fi#1}]\quad}}
+  \renewcommand\subcrumb[2]{{\sffamily[{\ifnum\value{subsection}=\value{subcrumbi}\color{orange}\fi#1}]$\;$}}
   \fancyhead[L]{
     \ff{\char`\\crumbs}: \crumbs
     \\[3pt]
@@ -85,7 +85,7 @@ You may redefine \ff{\char`\\crumb\{\}} and \ff{\char`\\subcrumb\{\}}
 commands, if you want your crumbs to look nicer, for example:
 
 \begin{ffcode}
-\renewcommand\crumb[1]{
+\renewcommand\crumb[2]{
   {
     \ifnum\value{section}=\value{crumbi}
       \color{orange}
