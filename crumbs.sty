@@ -56,19 +56,21 @@
 \newcounter{subcrumbi}
 \AtBeginDocument{
   \let\oldsection\section%
-  \renewcommand\section[1]{
+  \renewcommand\section[2][]{
+    \def\temp{#1}
     \ifx\crumbs\empty
       \appendtofile{\jobname.crumbs}{
         \back ifx \back crumbs \back empty
           \back gappto \back crumbs{\back setcounter{crumbi}{0}}
         \back fi
-        \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{#1}}
+        \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{\ifx\temp\empty #2\else #1\fi}}
       }
     \fi
-    \oldsection{#1}
+    \oldsection{#2}
   }%
   \let\oldsubsection\subsection
-  \renewcommand\subsection[1]{
+  \renewcommand\subsection[2][]{
+    \def\temp{#1}
     \ifx\crumbs\empty
       \appendtofile{\jobname.crumbs}{
         \back ifcsname crumbs\romannumeral\the\value{section}\back endcsname\back else
@@ -78,11 +80,11 @@
         \back fi
         \back expandafter\back gappto\back csname crumbs\romannumeral\the\value{section}\back endcsname{%
           \back stepcounter{subcrumbi}
-          \back subcrumb{#1}
+          \back subcrumb{\ifx\temp\empty #2\else #1\fi}
         }
       }
     \fi
-    \oldsubsection{#1}
+    \oldsubsection{#2}
   }%
   \IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}%
 }
