@@ -49,7 +49,7 @@
   \fi
 }
 
-\let\crumbsoldsection\section
+\NewCommandCopy\crumbsoldsection\section
 \renewcommand\section[2][]{
   \def\temp{#1}
   \ifx\crumbs\empty
@@ -63,7 +63,7 @@
   \crumbsoldsection{#2}
 }
 
-\let\crumbsoldsubsection\subsection
+\NewCommandCopy\crumbsoldsubsection\subsection
 \renewcommand\subsection[2][]{
   \def\temp{#1}
   \ifx\crumbs\empty
