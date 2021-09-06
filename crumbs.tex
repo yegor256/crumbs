@@ -99,8 +99,13 @@ The same for \ff{\char`\\subcrumb\{\}}, but the comparison should be
 done not between \ff{section} and \ff{crumbi}, but between
 \ff{subsection} and \ff{subcrumbi} counters.
 
+The first parameter of both \ff{\char`\\crumb\{\}} and \ff{\char`\\subcrumb\{\}}
+is the optional parameter of \ff{\char`\\section\{\}} and \ff{\char`\\subsection\{\}}
+calls respectively. The second one is the mandatory parameter of them, which
+is the full text of the section and sub-section.
+
 You can use \ff{\char`\\section} and \ff{\char`\\subsection} with
-an option argument, which will be used in the crumbs, e.g.:
+an optional argument, which will be used in the crumbs, e.g.:
 
 \begin{ffcode}
 \section[Details]{More Details About The Method}
