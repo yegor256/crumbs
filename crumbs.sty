@@ -82,8 +82,17 @@
   \crumbsoldsubsection{#2}
 }
 
-\newcommand\crumb[2]{#1}
-\newcommand\subcrumb[2]{#1}
+\ifcsname crumb\endcsname
+  \message{The command "crumb" already defined}
+\else
+  \newcommand\crumb[2]{#1}
+\fi
+\ifcsname subcrumb\endcsname
+  \message{The command "crumb" already defined}
+\else
+  \newcommand\subcrumb[2]{#1}
+\fi
+
 \newcommand*\crumbs{}
 \newcounter{crumbi}
 \newcounter{subcrumbi}
