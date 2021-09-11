@@ -49,7 +49,8 @@
   \fi
 }
 
-\NewCommandCopy\crumbsoldsection\section
+\makeatletter
+\NewCommandCopy\crumbs@oldsection\section
 \renewcommand\section[2][]{
   \def\temp{#1}
   \ifx\crumbs\empty
@@ -60,10 +61,9 @@
       \back gappto\back crumbs{\back stepcounter{crumbi}\back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}
     }
   \fi
-  \crumbsoldsection{#2}
+  \crumbs@oldsection{#2}
 }
-
-\NewCommandCopy\crumbsoldsubsection\subsection
+\NewCommandCopy\crumbs@oldsubsection\subsection
 \renewcommand\subsection[2][]{
   \def\temp{#1}
   \ifx\crumbs\empty
@@ -79,16 +79,17 @@
       }
     }
   \fi
-  \crumbsoldsubsection{#2}
+  \crumbs@oldsubsection{#2}
 }
+\makeatletter
 
 \ifcsname crumb\endcsname
-  \message{The command "crumb" already defined}
+  \message{The command "crumb" is already defined}
 \else
   \newcommand\crumb[2]{#1}
 \fi
 \ifcsname subcrumb\endcsname
-  \message{The command "crumb" already defined}
+  \message{The command "subcrumb" is already defined}
 \else
   \newcommand\subcrumb[2]{#1}
 \fi
