@@ -55,7 +55,7 @@ zip: crumbs.pdf crumbs.sty
 	cat crumbs.sty | grep RequirePackage | gsed -e "s/.*{\(.\+\)}.*/hard \1/" > DEPENDS.txt
 	cd ..
 	zip -r crumbs.zip *
-	cp crumbs.zip ..
+	cp crumbs.zip ../crumbs-$${version}.zip
 	cd ..
 
 clean:
