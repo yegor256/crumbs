@@ -23,6 +23,12 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crumbs}[00.00.0000 0.0.0 Navigation Crumbs]
 
+\makeatletter
+\newif\ifcrymbs@dry
+\DeclareOption{dry}{\crumbs@drytrue}
+\ProcessOptions\relax
+\makeatother
+
 \RequirePackage{etoolbox}
 
 % see https://tex.stackexchange.com/a/12414/1449
@@ -49,9 +55,7 @@
   \fi
 }
 
-\makeatletter
-\NewCommandCopy\crumbs@oldsection\section
-\renewcommand\section[2][]{%
+\makeatletter\newcommand\crumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
     \appendtofile{\jobname.crumbs}{
@@ -61,10 +65,9 @@
       \crumbs@back gappto\crumbs@back crumbs{\crumbs@back stepcounter{crumbi}\crumbs@back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}
     }%
   \fi%
-  \crumbs@oldsection{#2}%
-}
-\NewCommandCopy\crumbs@oldsubsection\subsection
-\renewcommand\subsection[2][]{%
+}\makeatother
+
+\makeatletter\newcommand\subcrumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
     \appendtofile{\jobname.crumbs}{
@@ -79,9 +82,22 @@
       }
     }%
   \fi%
-  \crumbs@oldsubsection{#2}%
-}
-\makeatletter
+}\makeatother
+
+\makeatletter\ifcrymbs@dry
+  \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}
+\else
+  \NewCommandCopy\crumbs@oldsection\section
+  \renewcommand\section[2][]{%
+    \crumbection[#1]{#2}%
+    \crumbs@oldsection{#2}%
+  }
+  \NewCommandCopy\crumbs@oldsubsection\subsection
+  \renewcommand\subsection[2][]{%
+    \subcrumbection[#1]{#2}%
+    \crumbs@oldsubsection{#2}%
+  }
+\fi\makeatletter
 
 \ifcsname crumb\endcsname
   \message{The command "crumb" is already defined}

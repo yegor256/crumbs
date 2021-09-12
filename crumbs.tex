@@ -114,6 +114,22 @@ an optional argument, which will be used in the crumbs, e.g.:
 
 \subsection{How to Contribute}
 
+You may turn on the ``dry'' mode, which will prohibit the package to
+renew \ff{\char`\\section\{\}} and \ff{\char`\\subsection\{\}} commands.
+You will still be able to use the crumbs mechanism through
+\ff{\char`\\crumbection\{\}} and \ff{\char`\\subcrumbection\{\}}
+commands, for example:
+
+\begin{ffcode}
+\documentclass{article}
+\usepackage[dry]{crumbs}
+\begin{document}
+\crumbection[Intro]{Introduction} % Add it to \crumbs
+\section{Introduction} % Print it to the page
+Hello, world!
+\end{document}
+\end{ffcode}
+
 More details about this package you can find
 in the \ff{yegor256/crumbs} GitHub repository.
 
