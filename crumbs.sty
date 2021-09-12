@@ -47,22 +47,22 @@
     \endgroup
   }
 
-\newcommand\subcrumbs{
-  \ifnum\value{section}=0\else
-    \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname
-      \csname crumbs\romannumeral\the\value{section}\endcsname{}
-    \fi
-  \fi
+\newcommand\subcrumbs{%
+  \ifnum\value{section}=0\else%
+    \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname%
+      \csname crumbs\romannumeral\the\value{section}\endcsname{}%
+    \fi%
+  \fi%
 }
 
 \makeatletter\newcommand\crumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
-    \appendtofile{\jobname.crumbs}{
-      \crumbs@back ifx \crumbs@back crumbs \crumbs@back empty
-        \crumbs@back gappto \crumbs@back crumbs{\crumbs@back setcounter{crumbi}{0}}
-      \crumbs@back fi
-      \crumbs@back gappto\crumbs@back crumbs{\crumbs@back stepcounter{crumbi}\crumbs@back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}
+    \appendtofile{\jobname.crumbs}{%
+      \crumbs@back ifx \crumbs@back crumbs \crumbs@back empty%
+        \crumbs@back gappto \crumbs@back crumbs{\crumbs@back setcounter{crumbi}{0}}%
+      \crumbs@back fi%
+      \crumbs@back gappto\crumbs@back crumbs{\crumbs@back stepcounter{crumbi}\crumbs@back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}%
     }%
   \fi%
   \ifcrumbs@increment\stepcounter{section}\fi%
@@ -71,24 +71,24 @@
 \makeatletter\newcommand\subcrumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
-    \appendtofile{\jobname.crumbs}{
+    \appendtofile{\jobname.crumbs}{%
       \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
         \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname{%
-          \crumbs@back setcounter{subcrumbi}{0}
-        }
-      \crumbs@back fi
+          \crumbs@back setcounter{subcrumbi}{0}%
+        }%
+      \crumbs@back fi%
       \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname{%
-        \crumbs@back stepcounter{subcrumbi}
-        \crumbs@back subcrumb{\ifx\temp\empty #2\else #1\fi}{#2}
-      }
+        \crumbs@back stepcounter{subcrumbi}%
+        \crumbs@back subcrumb{\ifx\temp\empty #2\else #1\fi}{#2}%
+      }%
     }%
   \fi%
   \ifcrumbs@increment\stepcounter{subsection}\fi%
 }\makeatother
 
-\makeatletter\ifcrumbs@dry
-  \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}
-\else
+\makeatletter\ifcrumbs@dry%
+  \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
+\else%
   \NewCommandCopy\crumbs@oldsection\section
   \renewcommand\section[2][]{%
     \crumbection[#1]{#2}%
@@ -101,16 +101,16 @@
   }
 \fi\makeatletter
 
-\ifcsname crumb\endcsname
-  \message{The command "crumb" is already defined}
-\else
-  \newcommand\crumb[2]{#1}
-\fi
-\ifcsname subcrumb\endcsname
-  \message{The command "subcrumb" is already defined}
-\else
-  \newcommand\subcrumb[2]{#1}
-\fi
+\ifcsname crumb\endcsname%
+  \message{The command "crumb" is already defined}%
+\else%
+  \newcommand\crumb[2]{#1}%
+\fi%
+\ifcsname subcrumb\endcsname%
+  \message{The command "subcrumb" is already defined}%
+\else%
+  \newcommand\subcrumb[2]{#1}%
+\fi%
 
 \newcommand*\crumbs{}
 \newcounter{crumbi}
