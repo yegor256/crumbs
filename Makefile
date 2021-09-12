@@ -24,7 +24,11 @@
 
 .ONESHELL:
 
-all: crumbs.pdf zip
+all: crumbs.pdf check zip
+
+check:
+	! grep '} }' crumbs.crumbs
+	! grep ' {' crumbs.crumbs
 
 crumbs.pdf: crumbs.tex crumbs.sty
 	latexmk -pdf $<

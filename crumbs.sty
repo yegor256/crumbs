@@ -79,8 +79,7 @@
       \crumbs@back fi%
       \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname{%
         \crumbs@back stepcounter{subcrumbi}%
-        \crumbs@back subcrumb{\ifx\temp\empty #2\else #1\fi}{#2}%
-      }%
+        \crumbs@back subcrumb{\ifx\temp\empty #2\else #1\fi}{#2}}%
     }%
   \fi%
   \ifcrumbs@increment\stepcounter{subsection}\fi%
