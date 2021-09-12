@@ -23,11 +23,9 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crumbs}[00.00.0000 0.0.0 Navigation Crumbs]
 
-\makeatletter
-\newif\ifcrymbs@dry
-\DeclareOption{dry}{\crumbs@drytrue}
+\makeatletter\newif\ifcrumbs@dry\makeatother
+\makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
 \ProcessOptions\relax
-\makeatother
 
 \RequirePackage{etoolbox}
 
@@ -84,7 +82,7 @@
   \fi%
 }\makeatother
 
-\makeatletter\ifcrymbs@dry
+\makeatletter\ifcrumbs@dry
   \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}
 \else
   \NewCommandCopy\crumbs@oldsection\section
