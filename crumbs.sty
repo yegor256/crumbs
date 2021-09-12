@@ -51,22 +51,22 @@
 
 \makeatletter
 \NewCommandCopy\crumbs@oldsection\section
-\renewcommand\section[2][]{
-  \def\temp{#1}
-  \ifx\crumbs\empty
+\renewcommand\section[2][]{%
+  \def\temp{#1}%
+  \ifx\crumbs\empty%
     \appendtofile{\jobname.crumbs}{
       \crumbs@back ifx \crumbs@back crumbs \crumbs@back empty
         \crumbs@back gappto \crumbs@back crumbs{\crumbs@back setcounter{crumbi}{0}}
       \crumbs@back fi
       \crumbs@back gappto\crumbs@back crumbs{\crumbs@back stepcounter{crumbi}\crumbs@back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}
-    }
-  \fi
-  \crumbs@oldsection{#2}
+    }%
+  \fi%
+  \crumbs@oldsection{#2}%
 }
 \NewCommandCopy\crumbs@oldsubsection\subsection
-\renewcommand\subsection[2][]{
-  \def\temp{#1}
-  \ifx\crumbs\empty
+\renewcommand\subsection[2][]{%
+  \def\temp{#1}%
+  \ifx\crumbs\empty%
     \appendtofile{\jobname.crumbs}{
       \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
         \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname{%
@@ -77,9 +77,9 @@
         \crumbs@back stepcounter{subcrumbi}
         \crumbs@back subcrumb{\ifx\temp\empty #2\else #1\fi}{#2}
       }
-    }
-  \fi
-  \crumbs@oldsubsection{#2}
+    }%
+  \fi%
+  \crumbs@oldsubsection{#2}%
 }
 \makeatletter
 
