@@ -25,6 +25,8 @@
 
 \makeatletter\newif\ifcrumbs@dry\makeatother
 \makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
+\makeatletter\newif\ifcrumbs@increment\makeatother
+\makeatletter\DeclareOption{increment}{\crumbs@incrementtrue}\makeatother
 \ProcessOptions\relax
 
 \RequirePackage{etoolbox}
@@ -63,6 +65,7 @@
       \crumbs@back gappto\crumbs@back crumbs{\crumbs@back stepcounter{crumbi}\crumbs@back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}
     }%
   \fi%
+  \ifcrumbs@increment\stepcounter{section}\fi%
 }\makeatother
 
 \makeatletter\newcommand\subcrumbection[2][]{%
@@ -79,6 +82,7 @@
         \crumbs@back subcrumb{\ifx\temp\empty #2\else #1\fi}{#2}
       }
     }%
+    \ifcrumbs@increment\stepcounter{subsection}\fi%
   \fi%
 }\makeatother
 
