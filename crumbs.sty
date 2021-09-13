@@ -23,13 +23,14 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crumbs}[00.00.0000 0.0.0 Navigation Crumbs]
 
+\RequirePackage{xkeyval}
+\RequirePackage{etoolbox}
+
 \makeatletter\newif\ifcrumbs@dry\makeatother
 \makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
 \makeatletter\newif\ifcrumbs@increment\makeatother
 \makeatletter\DeclareOption{increment}{\crumbs@incrementtrue}\makeatother
 \ProcessOptions\relax
-
-\RequirePackage{etoolbox}
 
 % see https://tex.stackexchange.com/a/12414/1449
 \makeatletter\newcommand\crumbs@back{\@backslashchar}\makeatother
@@ -59,8 +60,8 @@
   \def\temp{#1}%
   \ifx\crumbs\empty%
     \appendtofile{\jobname.crumbs}{%
-      \crumbs@back ifx \crumbs@back crumbs \crumbs@back empty%
-        \crumbs@back gappto \crumbs@back crumbs{\crumbs@back setcounter{crumbi}{0}}%
+      \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
+        \crumbs@back gappto\crumbs@back crumbs{\crumbs@back setcounter{crumbi}{0}}%
       \crumbs@back fi%
       \crumbs@back gappto\crumbs@back crumbs{\crumbs@back stepcounter{crumbi}\crumbs@back crumb{\ifx\temp\empty #2\else #1\fi}{#2}}%
     }%
