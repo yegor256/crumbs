@@ -71,3 +71,4 @@ zip: $(NAME).pdf $(NAME).sty
 
 clean:
 	git clean -dfX
+	cd tests && make clean && cd ..
