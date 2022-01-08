@@ -1,6 +1,6 @@
 # (The MIT License)
 #
-# Copyright (c) 2021 Yegor Bugayenko
+# Copyright (c) 2021-2022 Yegor Bugayenko
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the 'Software'), to deal
@@ -21,48 +21,52 @@
 # SOFTWARE.
 
 .SHELLFLAGS = -e -x -c
-
 .ONESHELL:
 
-all: crumbs.pdf test zip
+NAME=crumbs
 
-test:
-	pdflatex -pdf test.tex
+all: $(NAME).pdf test copyright zip
+
+copyright:
+	find . -name '*.tex' -o -name '*.sty' -o -name 'Makefile' | xargs -n1 grep -r "(c) 2021-$$(date +%Y) "
+
+test: tests/*.tex $(NAME).sty
+	cd tests && make && cd ..
 
 check:
-	! grep '} }' crumbs.crumbs
-	! grep ' {' crumbs.crumbs
+	! grep '} }' $(NAME).crumbs
+	! grep ' {' $(NAME).crumbs
 
-crumbs.pdf: crumbs.tex crumbs.sty
+$(NAME).pdf: $(NAME).tex $(NAME).sty
 	latexmk -pdf $<
 	texsc $<
 	texqc --ignore 'You have requested document class' $<
 
-zip: crumbs.pdf crumbs.sty
+zip: $(NAME).pdf $(NAME).sty
 	rm -rf package
 	mkdir package
 	cd package
-	mkdir crumbs
-	cd crumbs
+	mkdir $(NAME)
+	cd $(NAME)
 	cp ../../README.md .
-	version=$$(cat ../../VERSION.txt)
+	version=$$(curl --silent -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/yegor256/$(NAME)/releases/latest | jq -r '.tag_name')
 	echo "Version is: $${version}"
 	date=$$(date +%Y/%m/%d)
 	echo "Date is: $${date}"
-	cp ../../crumbs.sty .
-	gsed -i "s|0\.0\.0|$${version}|" crumbs.sty
-	gsed -i "s|00\.00\.0000|$${date}|" crumbs.sty
-	cp ../../crumbs.tex .
-	gsed -i "s|0\.0\.0|$${version}|" crumbs.tex
-	gsed -i "s|00\.00\.0000|$${date}|" crumbs.tex
+	cp ../../$(NAME).sty .
+	gsed -i "s|0\.0\.0|$${version}|" $(NAME).sty
+	gsed -i "s|00\.00\.0000|$${date}|" $(NAME).sty
+	cp ../../$(NAME).tex .
+	gsed -i "s|0\.0\.0|$${version}|" $(NAME).tex
+	gsed -i "s|00\.00\.0000|$${date}|" $(NAME).tex
 	cp ../../.latexmkrc .
-	latexmk -pdf crumbs.tex
+	latexmk -pdf $(NAME).tex
 	rm .latexmkrc
 	rm -rf _minted-* *.crumbs *.aux *.bbl *.bcf *.blg *.fdb_latexmk *.fls *.log *.run.xml *.out *.exc
-	cat crumbs.sty | grep RequirePackage | gsed -e "s/.*{\(.\+\)}.*/hard \1/" > DEPENDS.txt
+	cat $(NAME).sty | grep RequirePackage | gsed -e "s/.*{\(.\+\)}.*/hard \1/" > DEPENDS.txt
 	cd ..
-	zip -r crumbs.zip *
-	cp crumbs.zip ../crumbs-$${version}.zip
+	zip -r $(NAME).zip *
+	cp $(NAME).zip ../$(NAME)-$${version}.zip
 	cd ..
 
 clean:
