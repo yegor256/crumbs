@@ -20,9 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-.SHELLFLAGS = -e -x -c
+.SHELLFLAGS = -e -x -c -o pipefail
 .ONESHELL:
+SHELL = bash
 
+VERSION=0.0.0
 NAME=crumbs
 
 all: $(NAME).pdf test copyright zip
