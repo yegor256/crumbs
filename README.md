@@ -1,4 +1,5 @@
 [![make](https://github.com/yegor256/crumbs/actions/workflows/latexmk.yml/badge.svg)](https://github.com/yegor256/crumbs/actions/workflows/latexmk.yml)
+[![CTAN](https://img.shields.io/ctan/v/crumbs)](https://ctan.org/pkg/crumbs)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/crumbs/blob/master/LICENSE.txt)
 
 This LaTeX package adds nagivation crumbs to your document, which
