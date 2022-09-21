@@ -63,7 +63,7 @@ zip: $(NAME).pdf $(NAME).sty
 	latexmk -pdf $(NAME).tex
 	rm .latexmkrc
 	rm -rf _minted-* *.crumbs *.aux *.bbl *.bcf *.blg *.fdb_latexmk *.fls *.log *.run.xml *.out *.exc
-	cat $(NAME).sty | grep RequirePackage | gsed -e "s/.*{\(.\+\)}.*/hard \1/" > DEPENDS.txt
+	cat $(NAME).sty | grep RequirePackage | sed -e "s/.*{\(.\+\)}.*/hard \1/" > DEPENDS.txt
 	cd ..
 	zip -r $(NAME).zip *
 	cp $(NAME).zip ../$(NAME)-ctan.zip
