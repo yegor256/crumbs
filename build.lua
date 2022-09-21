@@ -1,7 +1,7 @@
 module = "crumbs"
 uploadconfig = {
   pkg = "crumbs",
-  version = "0.0.0",
+  version = "0.3.2",
   author = "Yegor Bugayenko",
   uploader = "Yegor Bugayenko",
   email = "yegor256@gmail.com",
