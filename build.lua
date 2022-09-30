@@ -1,4 +1,5 @@
 module = "crumbs"
+ctanupload = true
 typesetopts = "--interaction=batchmode --shell-escape"
 checkopts = "--interaction=batchmode --shell-escape"
 
