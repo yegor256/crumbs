@@ -1,0 +1,304 @@
+% \iffalse meta-comment
+% (The MIT License)
+%
+% Copyright (c) 2021-2022 Yegor Bugayenko
+%
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the 'Software'), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+%
+% The above copyright notice and this permission notice shall be included in all
+% copies or substantial portions of the Software.
+%
+% THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+% SOFTWARE.
+% \fi
+
+% \CheckSum{0}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+
+% \GetFileInfo{crumbs.dtx}
+% \DoNotIndex{\endgroup,\begingroup,\let,\else,\fi,\newcommand,\newenvironment}
+
+% \iffalse
+%<*driver>
+\ProvidesFile{crumbs.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}
+%<package>\ProvidesPackage{crumbs}
+%<*package>
+[00.00.0000 0.0.0 Inputable Shell Executions]
+%</package>
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage[tt=false, type1=true]{libertine}
+\usepackage{crumbs}
+\usepackage{href-ul}
+\raggedbottom
+\setlength{\parindent}{0pt}
+\setlength{\columnsep}{32pt}
+\setlength{\parskip}{6pt}
+\PageIndex
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+	\DocInput{crumbs.dtx}
+	\PrintChanges
+	\PrintIndex
+\end{document}
+%</driver>
+% \fi
+
+% \title{|crumbs|: \LaTeX{} Package \\ for Navigation Crumbs\thanks{The sources are in GitHub at \href{https://github.com/yegor256/crumbs}{yegor256/crumbs}}}
+% \author{Yegor Bugayenko \\ \texttt{yegor256@gmail.com}}
+% \date{\filedate, \fileversion}
+%
+% \maketitle
+%
+% \section{Introduction}
+%
+% This package helps you add navigation crumbs to your document,
+% which is most useful for presentation and slide decks:
+
+%\iffalse
+%<*verb>
+%\fi
+\begin{verbatim}
+\documentclass{article}
+\usepackage{crumbs}
+\usepackage{fancyhdr}
+  \fancyhf{}
+  \pagestyle{fancy}
+  \fancyhead[L]{\crumbs / \subcrumbs}
+\begin{document}
+\section{Introduction}
+Some text here.
+\section{Related Works}
+Some other text here.
+\end{document}
+\end{verbatim}
+%\iffalse
+%</verb>
+%\fi
+
+% You may redefine |\crumb{}| and |\subcrumb{}|
+% commands, if you want your crumbs to look nicer, for example:
+
+%\iffalse
+%<*verb>
+%\fi
+\begin{verbatim}
+\renewcommand\crumb[2]{
+  {
+    \ifnum\value{section}=\value{crumbi}
+      \color{orange}
+    \fi
+    #1
+  }
+}
+\end{verbatim}
+%\iffalse
+%</verb>
+%\fi
+
+% The same for |\subcrumb{}|, but the comparison should be
+% done not between |section| and |crumbi|, but between
+% |subsection| and |subcrumbi| counters.
+
+% The first parameter of both |\crumb{}| and |\subcrumb{}|
+% is the optional parameter of |\section{}| and |\subsection{}|
+% calls respectively. The second one is the mandatory parameter of them, which
+% is the full text of the section and sub-section.
+
+% You can use |\section| and |\subsection| with
+% an optional argument, which will be used in the crumbs, e.g.:
+
+%\iffalse
+%<*verb>
+%\fi
+\begin{verbatim}
+\section[Details]{More Details About The Method}
+\subsection[SLR]{Systematic Literature Review}
+\end{verbatim}
+%\iffalse
+%</verb>
+%\fi
+
+% \subsection{How to Contribute}
+
+% You may turn on the ``dry'' mode, which will prohibit the package to
+% renew |\section{}| and |\subsection{}| commands.
+% You will still be able to use the crumbs mechanism through
+% |\crumbection{}| and |\subcrumbection{}|
+% commands, for example:
+
+%\iffalse
+%<*verb>
+%\fi
+\begin{verbatim}
+\documentclass{article}
+\usepackage[dry]{crumbs}
+\begin{document}
+\crumbection[Intro]{Introduction} % Add it to \crumbs
+\section{Introduction} % Print it to the page
+Hello, world!
+\end{document}
+\end{verbatim}
+%\iffalse
+%</verb>
+%\fi
+
+% You can also instruct it to increment
+% |\section{}| and |\subsection{}|
+% on each call to |\crumbection{}| and |\subcrumbection{}|
+% respectively. Just use the |increment| package option.
+
+% \section{How It Works}
+
+% On the first run, a new file |jobname.crumbs| is created,
+% where all |\section| and |\subsection| commands
+% are being logged.
+
+% On the second run, the file is loaded and two commands are being
+% created: |\crumbs| and |\subcrumbs|. The first
+% one is a collection of |\crumb{}| calls, while the second
+% one is a collection of |\subcrumb{}| ones.
+
+% \StopEventually{}
+
+% \section{Implementation}
+
+% \changes{v0.2.0}{2021/07/10}{Initial version}
+
+% \iffalse
+\RequirePackage{xkeyval}
+\RequirePackage{etoolbox}
+
+\makeatletter\newif\ifcrumbs@dry\makeatother
+\makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
+\makeatletter\newif\ifcrumbs@increment\makeatother
+\makeatletter\DeclareOption{increment}{\crumbs@incrementtrue}\makeatother
+\ProcessOptions\relax
+% \fi
+
+% \begin{macro}{\crumbs}
+% It is implemented with the help of |\ShellEscape| from |shellesc| package:
+%    \begin{macrocode}
+% see https://tex.stackexchange.com/a/12414/1449
+\makeatletter\newcommand\crumbs@back{\@backslashchar}\makeatother
+% \makeatletter\newcommand\crumbs@percent{\@percentchar}\makeatother
+\RequirePackage{catchfile}
+  \newwrite\appendwrite
+  \ExplSyntaxOn\cs_new:Npn\appendtofile#1#2{%
+    \begingroup
+    \IfFileExists{#1}%
+      {\CatchFileDef{\filecontent}{#1}{\endlinechar=`^^J\catcode\endlinechar=12\relax}}% keep existing end-of-lines
+      {\let\filecontent\empty}%
+    \immediate\openout\appendwrite=#1\relax
+    \immediate\write\appendwrite{\unexpanded\expandafter{\filecontent} \text_purify:n{#2}}%
+    \immediate\closeout\appendwrite
+    \endgroup
+  }\ExplSyntaxOff
+
+\newcommand\subcrumbs{%
+  \ifnum\value{section}=0\else%
+    \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname%
+      \csname crumbs\romannumeral\the\value{section}\endcsname{}%
+    \fi%
+  \fi%
+}
+
+\makeatletter\newcommand\crumbection[2][]{%
+  \def\temp{#1}%
+  \ifx\crumbs\empty%
+    \appendtofile{\jobname.crumbs}{%
+      \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
+        \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back setcounter\{crumbi\}\{0\}\}%
+      \crumbs@back fi%
+      \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+    }%
+  \fi%
+  \ifcrumbs@increment\stepcounter{section}\fi%
+}\makeatother
+
+\makeatletter\newcommand\subcrumbection[2][]{%
+  \def\temp{#1}%
+  \ifx\crumbs\empty%
+    \appendtofile{\jobname.crumbs}{%
+      \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
+        \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+          \crumbs@back setcounter\{subcrumbi\}\{0\}%
+        \}%
+      \crumbs@back fi%
+      \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+        \crumbs@back stepcounter\{subcrumbi\}%
+        \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+    }%
+  \fi%
+  \ifcrumbs@increment\stepcounter{subsection}\fi%
+}\makeatother
+
+\makeatletter\ifcrumbs@dry%
+  \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
+\else%
+  \NewCommandCopy\crumbs@oldsection\section
+  \renewcommand\section[2][]{%
+    \crumbection[#1]{#2}%
+    \crumbs@oldsection{#2}%
+  }
+  \NewCommandCopy\crumbs@oldsubsection\subsection
+  \renewcommand\subsection[2][]{%
+    \subcrumbection[#1]{#2}%
+    \crumbs@oldsubsection{#2}%
+  }
+\fi\makeatletter
+
+\ifcsname crumb\endcsname%
+  \message{The command "crumb" is already defined}%
+\else%
+  \newcommand\crumb[2]{#1}%
+\fi%
+\ifcsname subcrumb\endcsname%
+  \message{The command "subcrumb" is already defined}%
+\else%
+  \newcommand\subcrumb[2]{#1}%
+\fi%
+
+\newcommand*\crumbs{}
+\newcounter{crumbi}
+\newcounter{subcrumbi}
+\AtBeginDocument{\IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}}
+%    \end{macrocode}
+% \end{macro}
+
+% \Finale
+
+%\clearpage
+%
+%\PrintChanges
+%\clearpage
+%\PrintIndex

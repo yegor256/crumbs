@@ -1,0 +1,17 @@
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{crumbs}
+\begin{document}
+\START
+
+\section{\textbf{Intro}duction}
+\section[Intro]{\textbf{Intro}duction}
+\crumbection[Foo]{Foo}
+\crumbection{\small Foo}
+\subcrumbection[Bar]{\large \TeX{} Bar}
+\subcrumbection{\large \TeX{} Bar}
+Hello, world!
+\crumbs
+\subcrumbs
+
+\END
