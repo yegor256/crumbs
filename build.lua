@@ -7,7 +7,7 @@ dynamicfiles = {"*.crumbs"}
 
 uploadconfig = {
   pkg = "crumbs",
-  version = "0.0.0",
+  version = "0.4.1",
   author = "Yegor Bugayenko",
   uploader = "Yegor Bugayenko",
   email = "yegor256@gmail.com",
