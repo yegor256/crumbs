@@ -57,10 +57,6 @@
 \usepackage[tt=false, type1=true]{libertine}
 \usepackage{crumbs}
 \usepackage{href-ul}
-\raggedbottom
-\setlength{\parindent}{0pt}
-\setlength{\columnsep}{32pt}
-\setlength{\parskip}{6pt}
 \PageIndex
 \EnableCrossrefs
 \CodelineIndex
@@ -82,8 +78,7 @@
 % \section{Introduction}
 %
 % This package helps you add navigation crumbs to your document,
-% which is most useful for presentation and slide decks:
-
+% which is most useful for presentations and slide decks:
 %\iffalse
 %<*verb>
 %\fi
@@ -105,38 +100,42 @@ Some other text here.
 %</verb>
 %\fi
 
+% \begin{macro}{\crumb}
 % You may redefine |\crumb{}| and |\subcrumb{}|
 % commands, if you want your crumbs to look nicer, for example:
-
 %\iffalse
 %<*verb>
 %\fi
 \begin{verbatim}
-\renewcommand\crumb[2]{
-  {
-    \ifnum\value{section}=\value{crumbi}
-      \color{orange}
-    \fi
-    #1
-  }
-}
+\renewcommand\crumb[2]{{
+  \ifnum\value{section}=\value{crumbi}
+    \color{orange}
+  \fi
+  #1
+}}
 \end{verbatim}
 %\iffalse
 %</verb>
 %\fi
+% \end{macro}
+% The command will be called by |\crumbs| with two arguments. The first one
+% will be the short name of the crumb, the second one will be the long one.
+% The counter |crumbi| will be equal to the position of the crumb
+% being rendered, starting from zero.
 
+% \begin{macro}{\subcrumb}
 % The same for |\subcrumb{}|, but the comparison should be
 % done not between |section| and |crumbi|, but between
 % |subsection| and |subcrumbi| counters.
+% \end{macro}
 
+% \begin{macro}{\section}
 % The first parameter of both |\crumb{}| and |\subcrumb{}|
 % is the optional parameter of |\section{}| and |\subsection{}|
 % calls respectively. The second one is the mandatory parameter of them, which
 % is the full text of the section and sub-section.
-
-% You can use |\section| and |\subsection| with
+% When you use |crumbs| package, you can use |\section| and |\subsection| with
 % an optional argument, which will be used in the crumbs, e.g.:
-
 %\iffalse
 %<*verb>
 %\fi
@@ -147,15 +146,15 @@ Some other text here.
 %\iffalse
 %</verb>
 %\fi
+% \end{macro}
 
-% \subsection{How to Contribute}
+% \section{Package Options}
 
+% \begin{macro}{dry}
 % You may turn on the ``dry'' mode, which will prohibit the package to
 % renew |\section{}| and |\subsection{}| commands.
 % You will still be able to use the crumbs mechanism through
-% |\crumbection{}| and |\subcrumbection{}|
-% commands, for example:
-
+% |\crumbection{}| and |\subcrumbection{}| commands, for example:
 %\iffalse
 %<*verb>
 %\fi
@@ -171,11 +170,14 @@ Hello, world!
 %\iffalse
 %</verb>
 %\fi
+% \end{macro}
 
+% \begin{macro}{increment}
 % You can also instruct it to increment
 % |\section{}| and |\subsection{}|
 % on each call to |\crumbection{}| and |\subcrumbection{}|
 % respectively. Just use the |increment| package option.
+% \end{macro}
 
 % \section{How It Works}
 
@@ -197,7 +199,6 @@ Hello, world!
 % \iffalse
 \RequirePackage{xkeyval}
 \RequirePackage{etoolbox}
-
 \makeatletter\newif\ifcrumbs@dry\makeatother
 \makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
 \makeatletter\newif\ifcrumbs@increment\makeatother
@@ -206,11 +207,17 @@ Hello, world!
 % \fi
 
 % \begin{macro}{\crumbs}
-% It is implemented with the help of |\ShellEscape| from |shellesc| package:
+% It is implemented with the help of |catchfile| package. First,
+% we define special commands for special characters inside the
+% |jobname.crumbs| files, as suggested \href{https://tex.stackexchange.com/a/12414/1449}{here}:
 %    \begin{macrocode}
-% see https://tex.stackexchange.com/a/12414/1449
 \makeatletter\newcommand\crumbs@back{\@backslashchar}\makeatother
-% \makeatletter\newcommand\crumbs@percent{\@percentchar}\makeatother
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\appendtofile}
+% Then, we define a new command |\appendtofile|:
+%    \begin{macrocode}
 \RequirePackage{catchfile}
   \newwrite\appendwrite
   \ExplSyntaxOn\cs_new:Npn\appendtofile#1#2{%
@@ -223,7 +230,12 @@ Hello, world!
     \immediate\closeout\appendwrite
     \endgroup
   }\ExplSyntaxOff
+%    \end{macrocode}
+% \end{macro}
 
+% \begin{macro}{\subcrumbs}
+% The command |\subcrumbs| prints all sub-crumbs for the current subsection:
+%    \begin{macrocode}
 \newcommand\subcrumbs{%
   \ifnum\value{section}=0\else%
     \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname%
@@ -231,7 +243,12 @@ Hello, world!
     \fi%
   \fi%
 }
+%    \end{macrocode}
+% \end{macro}
 
+% \begin{macro}{\crumbection}
+% The command |\crumbection| registers a new crumb:
+%    \begin{macrocode}
 \makeatletter\newcommand\crumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
@@ -244,7 +261,12 @@ Hello, world!
   \fi%
   \ifcrumbs@increment\stepcounter{section}\fi%
 }\makeatother
+%    \end{macrocode}
+% \end{macro}
 
+% \begin{macro}{\subcrumbection}
+% The command |\subcrumbection| registers a new subcrumb:
+%    \begin{macrocode}
 \makeatletter\newcommand\subcrumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
@@ -261,7 +283,12 @@ Hello, world!
   \fi%
   \ifcrumbs@increment\stepcounter{subsection}\fi%
 }\makeatother
+%    \end{macrocode}
+% \end{macro}
 
+% \begin{macro}{\section}
+% We also redefined |\section| and |\subsection| commands:
+%    \begin{macrocode}
 \makeatletter\ifcrumbs@dry%
   \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
 \else%
@@ -276,24 +303,44 @@ Hello, world!
     \crumbs@oldsubsection{#2}%
   }
 \fi\makeatletter
+%    \end{macrocode}
+% \end{macro}
 
+% \begin{macro}{\crumb}
+% We define default implementations of |\crumb| command:
+%    \begin{macrocode}
 \ifcsname crumb\endcsname%
   \message{The command "crumb" is already defined}%
 \else%
   \newcommand\crumb[2]{#1}%
 \fi%
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\subcrumb}
+% We define default implementations of |\subcrumb| command:
+%    \begin{macrocode}
 \ifcsname subcrumb\endcsname%
   \message{The command "subcrumb" is already defined}%
 \else%
   \newcommand\subcrumb[2]{#1}%
 \fi%
+%    \end{macrocode}
+% \end{macro}
 
+% \begin{macro}{crumbi}
+% We also define a few counters:
+%    \begin{macrocode}
 \newcommand*\crumbs{}
 \newcounter{crumbi}
 \newcounter{subcrumbi}
-\AtBeginDocument{\IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}}
 %    \end{macrocode}
 % \end{macro}
+
+% Finally, we load the file into the document:
+%    \begin{macrocode}
+\AtBeginDocument{\IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}}
+%    \end{macrocode}
 
 % \Finale
 
