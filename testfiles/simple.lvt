@@ -6,6 +6,7 @@
 
 \section{\textbf{Intro}duction}
 \section[Intro]{\textbf{Intro}duction}
+\section{\small Overview}
 \crumbection[Foo]{Foo}
 \crumbection{\small Foo}
 \subcrumbection[Bar]{\large \TeX{} Bar}
