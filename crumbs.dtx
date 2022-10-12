@@ -100,7 +100,7 @@ Some other text here.
 %</verb>
 %\fi
 
-% \begin{macro}{\crumb}
+% \DescribeMacro{\crumb}
 % You may redefine |\crumb{}| and |\subcrumb{}|
 % commands, if you want your crumbs to look nicer, for example:
 %\iffalse
@@ -117,19 +117,18 @@ Some other text here.
 %\iffalse
 %</verb>
 %\fi
-% \end{macro}
 % The command will be called by |\crumbs| with two arguments. The first one
 % will be the short name of the crumb, the second one will be the long one.
 % The counter |crumbi| will be equal to the position of the crumb
 % being rendered, starting from zero.
 
-% \begin{macro}{\subcrumb}
+% \DescribeMacro{\subcrumb}
 % The same for |\subcrumb{}|, but the comparison should be
 % done not between |section| and |crumbi|, but between
 % |subsection| and |subcrumbi| counters.
-% \end{macro}
 
-% \begin{macro}{\section}
+% \DescribeMacro{\section}
+% \DescribeMacro{\subsection}
 % The first parameter of both |\crumb{}| and |\subcrumb{}|
 % is the optional parameter of |\section{}| and |\subsection{}|
 % calls respectively. The second one is the mandatory parameter of them, which
@@ -146,11 +145,10 @@ Some other text here.
 %\iffalse
 %</verb>
 %\fi
-% \end{macro}
 
 % \section{Package Options}
 
-% \begin{macro}{dry}
+% \DescribeMacro{dry}
 % You may turn on the ``dry'' mode, which will prohibit the package to
 % renew |\section{}| and |\subsection{}| commands.
 % You will still be able to use the crumbs mechanism through
@@ -170,14 +168,12 @@ Hello, world!
 %\iffalse
 %</verb>
 %\fi
-% \end{macro}
 
-% \begin{macro}{increment}
+% \DescribeMacro{increment}
 % You can also instruct it to increment
 % |\section{}| and |\subsection{}|
 % on each call to |\crumbection{}| and |\subcrumbection{}|
 % respectively. Just use the |increment| package option.
-% \end{macro}
 
 % \section{How It Works}
 
