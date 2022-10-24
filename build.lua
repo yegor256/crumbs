@@ -1,7 +1,7 @@
 module = "crumbs"
 ctanupload = true
-typesetopts = "--interaction=batchmode --shell-escape"
-checkopts = "--interaction=batchmode --shell-escape"
+typesetopts = "-interaction=batchmode -shell-escape -halt-on-error"
+checkopts = "-interaction=batchmode -shell-escape -halt-on-error"
 tagfiles = {"build.lua", "crumbs.dtx"}
 dynamicfiles = {"*.crumbs"}
 
