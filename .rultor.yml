@@ -6,6 +6,7 @@ install: |-
   sudo apt-get install -y aspell
   sudo tlmgr option repository ctan
   sudo tlmgr --verify-repo=none update --self
+  sudl tlmgr --verify-repo=none install $(cut -d' ' -f2 DEPENDS.txt | uniq)
   sudo tlmgr --verify-repo=none install l3build
 merge:
   script: |-
