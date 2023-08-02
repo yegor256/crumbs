@@ -1,3 +1,9 @@
-hard xkeyval
-hard etoolbox
 hard catchfile
+hard etoolbox
+hard xkeyval
+soft href-ul
+soft l3build
+soft libertine
+soft scheme-basic
+soft tools
+soft xetex
