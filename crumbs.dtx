@@ -207,7 +207,9 @@ Hello, world!
 % we define special commands for special characters inside the
 % |jobname.crumbs| files, as suggested \href{https://tex.stackexchange.com/a/12414/1449}{here}:
 %    \begin{macrocode}
-\makeatletter\newcommand\crumbs@back{\@backslashchar}\makeatother
+\makeatletter
+\newcommand\crumbs@back{\@backslashchar}
+\makeatother
 %    \end{macrocode}
 % \end{macro}
 
@@ -245,7 +247,8 @@ Hello, world!
 % \begin{macro}{\crumbection}
 % The command |\crumbection| registers a new crumb:
 %    \begin{macrocode}
-\makeatletter\newcommand\crumbection[2][]{%
+\makeatletter
+\newcommand\crumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
     \appendtofile{\jobname.crumbs}{%
@@ -256,14 +259,16 @@ Hello, world!
     }%
   \fi%
   \ifcrumbs@increment\stepcounter{section}\fi%
-}\makeatother
+}
+\makeatother
 %    \end{macrocode}
 % \end{macro}
 
 % \begin{macro}{\subcrumbection}
 % The command |\subcrumbection| registers a new subcrumb:
 %    \begin{macrocode}
-\makeatletter\newcommand\subcrumbection[2][]{%
+\makeatletter
+\newcommand\subcrumbection[2][]{%
   \def\temp{#1}%
   \ifx\crumbs\empty%
     \appendtofile{\jobname.crumbs}{%
@@ -278,14 +283,16 @@ Hello, world!
     }%
   \fi%
   \ifcrumbs@increment\stepcounter{subsection}\fi%
-}\makeatother
+}
+\makeatother
 %    \end{macrocode}
 % \end{macro}
 
 % \begin{macro}{\section}
 % We also redefined |\section| and |\subsection| commands:
 %    \begin{macrocode}
-\makeatletter\ifcrumbs@dry%
+\makeatletter
+\ifcrumbs@dry%
   \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
 \else%
   \NewCommandCopy\crumbs@oldsection\section
@@ -298,7 +305,8 @@ Hello, world!
     \subcrumbection[#1]{#2}%
     \crumbs@oldsubsection{#2}%
   }
-\fi\makeatletter
+\fi
+\makeatletter
 %    \end{macrocode}
 % \end{macro}
 

@@ -1,6 +1,6 @@
 hard catchfile
 hard etoolbox
-hard xkeyval
+hard pgfopts
 soft href-ul
 soft l3build
 soft libertine
