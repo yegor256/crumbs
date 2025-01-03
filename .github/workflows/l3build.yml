@@ -21,18 +21,38 @@
 # SOFTWARE.
 ---
 name: l3build
-on:
+'on':
   push:
     branches: master
   pull_request:
     branches: master
 jobs:
   l3build:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    env:
+      TERM: xterm-256color
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, macos-15]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
       - uses: teatimeguest/setup-texlive-action@v3.3.4
         with:
           update-all-packages: true
           package-file: DEPENDS.txt
-      - run: l3build check -q --show-log-on-error
+      - run: l3build ctan --show-log-on-error --halt-on-error
+      - run: |
+          mkdir build/gh-pages
+          cp build/distrib/tds/tex/latex/crumbs/crumbs.sty build/gh-pages
+          sed -i "s/0\.0\.0/$(date +%H.%M.%S)/g" build/gh-pages/crumbs.sty
+          sed -i "s|0000/00/00|$(date +%Y/%m/%d)|g" build/gh-pages/crumbs.sty
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04'
+      - uses: JamesIves/github-pages-deploy-action@v4.7.2
+        with:
+          branch: gh-pages
+          folder: build/gh-pages
+          clean: true
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-24.04'
