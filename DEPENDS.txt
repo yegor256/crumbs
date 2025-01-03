@@ -2,6 +2,7 @@ hard catchfile
 hard etoolbox
 hard pgfopts
 soft href-ul
+soft hypdoc
 soft l3build
 soft libertine
 soft scheme-basic
