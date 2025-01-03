@@ -25,6 +25,10 @@ Some other text here.
 \end{document}
 ```
 
+Otherwise, you can download
+[`crumbs.sty`](https://yegor256.github.io/crumbs/crumbs.sty) and
+add to your project.
+
 If you want to contribute yourself, make a fork, then create a branch,
 then run `make` in the root directory.
 It should compile everything without errors. If not, submit an issue and wait.
