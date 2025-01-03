@@ -1,0 +1,154 @@
+%%
+%% This is file `crumbs.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% crumbs.dtx  (with options: `package')
+%% (The MIT License)
+%% 
+%% Copyright (c) 2021-2025 Yegor Bugayenko
+%% 
+%% Permission is hereby granted, free of charge, to any person obtaining a copy
+%% of this software and associated documentation files (the 'Software'), to deal
+%% in the Software without restriction, including without limitation the rights
+%% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%% copies of the Software, and to permit persons to whom the Software is
+%% furnished to do so, subject to the following conditions:
+%% 
+%% The above copyright notice and this permission notice shall be included in all
+%% copies or substantial portions of the Software.
+%% 
+%% THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+%% SOFTWARE.
+
+
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{crumbs}
+[2025/01/03 03.18.03 Inputable Shell Executions]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\RequirePackage{xkeyval}
+\RequirePackage{etoolbox}
+\makeatletter\newif\ifcrumbs@dry\makeatother
+\makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
+\makeatletter\newif\ifcrumbs@increment\makeatother
+\makeatletter\DeclareOption{increment}{\crumbs@incrementtrue}\makeatother
+\ProcessOptions\relax
+
+\makeatletter
+\newcommand\crumbs@back{\@backslashchar}
+\makeatother
+
+\RequirePackage{catchfile}
+  \newwrite\appendwrite
+  \ExplSyntaxOn\cs_new:Npn\appendtofile#1#2{%
+    \begingroup
+    \IfFileExists{#1}%
+      {\CatchFileDef{\filecontent}{#1}{\endlinechar=`^^J\catcode\endlinechar=12\relax}}% keep existing end-of-lines
+      {\let\filecontent\empty}%
+    \immediate\openout\appendwrite=#1\relax
+    \immediate\write\appendwrite{\unexpanded\expandafter{\filecontent} \text_purify:n{#2}}%
+    \immediate\closeout\appendwrite
+    \endgroup
+  }\ExplSyntaxOff
+
+\newcommand\subcrumbs{%
+  \ifnum\value{section}=0\else%
+    \expandafter\ifcsname crumbs\romannumeral\the\value{section}\endcsname%
+      \csname crumbs\romannumeral\the\value{section}\endcsname{}%
+    \fi%
+  \fi%
+}
+
+\makeatletter
+\newcommand\crumbection[2][]{%
+  \def\temp{#1}%
+  \ifx\crumbs\empty%
+    \appendtofile{\jobname.crumbs}{%
+      \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
+        \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back setcounter\{crumbi\}\{0\}\}%
+      \crumbs@back fi%
+      \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+    }%
+  \fi%
+  \ifcrumbs@increment\stepcounter{section}\fi%
+}
+\makeatother
+
+\makeatletter
+\newcommand\subcrumbection[2][]{%
+  \def\temp{#1}%
+  \ifx\crumbs\empty%
+    \appendtofile{\jobname.crumbs}{%
+      \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
+        \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+          \crumbs@back setcounter\{subcrumbi\}\{0\}%
+        \}%
+      \crumbs@back fi%
+      \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+        \crumbs@back stepcounter\{subcrumbi\}%
+        \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+    }%
+  \fi%
+  \ifcrumbs@increment\stepcounter{subsection}\fi%
+}
+\makeatother
+
+\makeatletter
+\ifcrumbs@dry%
+  \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
+\else%
+  \NewCommandCopy\crumbs@oldsection\section
+  \renewcommand\section[2][]{%
+    \crumbection[#1]{#2}%
+    \crumbs@oldsection{#2}%
+  }
+  \NewCommandCopy\crumbs@oldsubsection\subsection
+  \renewcommand\subsection[2][]{%
+    \subcrumbection[#1]{#2}%
+    \crumbs@oldsubsection{#2}%
+  }
+\fi
+\makeatletter
+
+\ifcsname crumb\endcsname%
+  \message{The command "crumb" is already defined}%
+\else%
+  \newcommand\crumb[2]{#1}%
+\fi%
+
+\ifcsname subcrumb\endcsname%
+  \message{The command "subcrumb" is already defined}%
+\else%
+  \newcommand\subcrumb[2]{#1}%
+\fi%
+
+\newcommand*\crumbs{}
+\newcounter{crumbi}
+\newcounter{subcrumbi}
+
+\AtBeginDocument{\IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}}
+
+
+\endinput
+%%
+%% End of file `crumbs.sty'.
