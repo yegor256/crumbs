@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - uses: teatimeguest/setup-texlive-action@v3.4.1
+      - uses: teatimeguest/setup-texlive-action@v3.3.4
         with:
           update-all-packages: true
           package-file: DEPENDS.txt
