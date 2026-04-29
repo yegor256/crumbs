@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - uses: zauguin/install-texlive@v4.0.0
+      - uses: zauguin/install-texlive@v4.3
         with:
           package_file: DEPENDS.txt
           texlive_version: 2025
