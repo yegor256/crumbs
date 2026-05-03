@@ -4,8 +4,8 @@
 [![CTAN](https://img.shields.io/ctan/v/crumbs)](https://ctan.org/pkg/crumbs)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/crumbs/blob/master/LICENSE.txt)
 
-This LaTeX package adds nagivation crumbs to your document, which
-may be very useful for presentation and slide decks.
+This LaTeX package adds navigation crumbs to your document, which
+may be very useful for presentations and slide decks.
 
 First,
 [install it](https://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages)
