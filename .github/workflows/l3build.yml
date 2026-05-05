@@ -28,6 +28,11 @@ jobs:
           package_file: .texlive-packages.txt
           texlive_version: 2025
       - run: l3build ctan --show-log-on-error --halt-on-error
+      - if: failure()
+        run: |
+          echo '::group::crumbs.log'
+          cat build/doc/crumbs.log 2>/dev/null || echo 'no build/doc/crumbs.log'
+          echo '::endgroup::'
       - run: |
           mkdir build/gh-pages
           cp build/distrib/tds/tex/latex/crumbs/crumbs.sty build/gh-pages
