@@ -4,7 +4,7 @@ hard pgfopts
 soft href-ul
 soft hypdoc
 soft l3build
-soft lmodern
+soft lm
 soft scheme-basic
 soft tools
 soft xetex
