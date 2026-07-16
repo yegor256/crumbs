@@ -1,10 +1,13 @@
 hard catchfile
 hard etoolbox
 hard pgfopts
+soft bookmark
+soft fail-fast
 soft href-ul
 soft hypdoc
 soft l3build
 soft lm
 soft scheme-basic
+soft silence
 soft tools
 soft xetex
