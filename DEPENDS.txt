@@ -1,6 +1,7 @@
 hard catchfile
 hard etoolbox
 hard pgfopts
+hard xkeyval
 soft bookmark
 soft fail-fast
 soft href-ul
