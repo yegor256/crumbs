@@ -220,15 +220,21 @@ Hello, world!
 %    \end{macrocode}
 % \end{macro}
 
-% \begin{macro}{\appendtofile}
-% Then, we define a new command |\appendtofile|, which writes one
-% purified line to the stream that stays open for the whole run:
+% \begin{macro}{\crumbs@out}
+% \begin{macro}{\crumbs@write}
+% Then, we allocate the output stream |\crumbs@out| and define
+% |\crumbs@write|, which writes one purified line to it; the stream
+% stays open for the whole run:
+% \changes{v0.4.2}{2026/10/15}{Internal helpers are prefixed with \texttt{crumbs@}, so a document may define \texttt{\char`\\temp} or \texttt{\char`\\appendtofile} without interference.}
 %    \begin{macrocode}
-\newwrite\appendwrite
+\makeatletter
+\newwrite\crumbs@out
 \ExplSyntaxOn
-\cs_new:Npn\appendtofile#1{\immediate\write\appendwrite{\text_purify:n{#1}}}
+\cs_new:Npn\crumbs@write#1{\immediate\write\crumbs@out{\text_purify:n{#1}}}
 \ExplSyntaxOff
+\makeatother
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 
 % \begin{macro}{\subcrumbs}
@@ -249,12 +255,12 @@ Hello, world!
 %    \begin{macrocode}
 \makeatletter
 \newcommand\crumbection[2][]{%
-  \def\temp{#1}%
-  \appendtofile{%
+  \def\crumbs@temp{#1}%
+  \crumbs@write{%
     \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
       \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back setcounter\{crumbi\}\{0\}\}%
     \crumbs@back fi%
-    \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+    \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\crumbs@temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
   }%
   \ifcrumbs@increment\stepcounter{section}\fi%
 }
@@ -271,8 +277,8 @@ Hello, world!
   \ifnum\value{section}=0%
     \PackageError{crumbs}{A subcrumb needs a section, but the section counter is zero}{Put \string\section\space or \string\crumbection\space before \string\subsection\space or \string\subcrumbection}%
   \else%
-    \def\temp{#1}%
-    \appendtofile{%
+    \def\crumbs@temp{#1}%
+    \crumbs@write{%
       \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
         \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
           \crumbs@back setcounter\{subcrumbi\}\{0\}%
@@ -280,7 +286,7 @@ Hello, world!
       \crumbs@back fi%
       \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
         \crumbs@back stepcounter\{subcrumbi\}%
-        \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+        \crumbs@back subcrumb{\ifx\crumbs@temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
     }%
     \ifcrumbs@increment\stepcounter{subsection}\fi%
   \fi%
@@ -363,11 +369,13 @@ Hello, world!
 % by the previous run and then open it for writing again, so that
 % every run produces a fresh one:
 %    \begin{macrocode}
+\makeatletter
 \AtBeginDocument{%
   \IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}%
-  \immediate\openout\appendwrite=\jobname.crumbs\relax%
+  \immediate\openout\crumbs@out=\jobname.crumbs\relax%
 }
-\AtEndDocument{\immediate\closeout\appendwrite}
+\AtEndDocument{\immediate\closeout\crumbs@out}
+\makeatother
 %    \end{macrocode}
 
 % \Finale
