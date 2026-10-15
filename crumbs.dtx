@@ -64,6 +64,8 @@
 %
 % \section{Introduction}
 %
+% \DescribeMacro{\crumbs}
+% \DescribeMacro{\subcrumbs}
 % This package facilitates the addition of navigation crumbs to a document,
 % a feature particularly valuable in presentations and slide decks:
 %\iffalse
@@ -107,7 +109,7 @@ Some other text here.
 % The command is invoked by |\crumbs| with two arguments: the first
 % denotes the short name of the crumb, the second its long form.
 % The counter |crumbi| holds the position of the crumb currently being
-% rendered, indexed from zero.
+% rendered, indexed from one.
 
 % \DescribeMacro{\subcrumb}
 % The same applies to |\subcrumb{}|, except that the comparison is
@@ -136,6 +138,8 @@ Some other text here.
 % \section{Package Options}
 
 % \DescribeMacro{dry}
+% \DescribeMacro{\crumbection}
+% \DescribeMacro{\subcrumbection}
 % A ``dry'' mode may be enabled, which prevents the package from
 % redefining the |\section{}| and |\subsection{}| commands.
 % The crumbs mechanism nevertheless remains available via the
@@ -157,19 +161,23 @@ Hello, world!
 %\fi
 
 % \DescribeMacro{increment}
-% The package may further be instructed to increment
-% |\section{}| and |\subsection{}| upon each invocation of
-% |\crumbection{}| and |\subcrumbection{}|, respectively, by means
-% of the |increment| package option.
+% The |increment| package option instructs the package to step
+% the |section| counter upon each invocation of |\crumbection{}|
+% and the |subsection| counter upon each invocation
+% of |\subcrumbection{}|.
+% This option is intended for the |dry| mode only, since otherwise
+% the redefined |\section{}| and |\subsection{}| would advance
+% their counters twice.
 
 % \section{How It Works}
 
 % On the first compilation, a new file |jobname.crumbs| is generated,
 % in which all |\section| and |\subsection| commands are logged.
 
-% On the second compilation, this file is loaded and two commands are
-% created: |\crumbs| and |\subcrumbs|. The former represents a collection
-% of |\crumb{}| invocations, while the latter aggregates |\subcrumb{}| ones.
+% On the second compilation, this file is loaded and it populates
+% the |\crumbs| command with a collection of |\crumb{}| invocations,
+% together with one command per section that aggregates its
+% |\subcrumb{}| invocations and is printed by |\subcrumbs|.
 
 % \StopEventually{}
 
@@ -177,20 +185,23 @@ Hello, world!
 
 % \changes{v0.2.0}{2021/07/10}{Initial version}
 
-% \iffalse
-\RequirePackage{xkeyval}
+% First, we load the \href{https://ctan.org/pkg/etoolbox}{etoolbox}
+% package and declare the |dry| and |increment| options:
+%    \begin{macrocode}
 \RequirePackage{etoolbox}
-\makeatletter\newif\ifcrumbs@dry\makeatother
-\makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
-\makeatletter\newif\ifcrumbs@increment\makeatother
-\makeatletter\DeclareOption{increment}{\crumbs@incrementtrue}\makeatother
+\makeatletter
+\newif\ifcrumbs@dry
+\DeclareOption{dry}{\crumbs@drytrue}
+\newif\ifcrumbs@increment
+\DeclareOption{increment}{\crumbs@incrementtrue}
+\makeatother
 \ProcessOptions\relax
-% \fi
+%    \end{macrocode}
 
-% \begin{macro}{\crumbs}
-% It is implemented with the help of |catchfile| package. First,
-% we define special commands for special characters inside the
-% |jobname.crumbs| files, as suggested \href{https://tex.stackexchange.com/a/12414/1449}{here}:
+% \begin{macro}{\crumbs@back}
+% The |\crumbs| command is implemented with the help of the |catchfile|
+% package. We define a special command for the backslash character
+% inside the |jobname.crumbs| file, as suggested \href{https://tex.stackexchange.com/a/12414/1449}{here}:
 %    \begin{macrocode}
 \makeatletter
 \newcommand\crumbs@back{\@backslashchar}
@@ -217,7 +228,7 @@ Hello, world!
 % \end{macro}
 
 % \begin{macro}{\subcrumbs}
-% The command |\subcrumbs| prints all subcrumbs for the current subsection:
+% The command |\subcrumbs| prints all subcrumbs of the current section:
 %    \begin{macrocode}
 \newcommand\subcrumbs{%
   \ifnum\value{section}=0\else%
@@ -274,7 +285,8 @@ Hello, world!
 % \end{macro}
 
 % \begin{macro}{\section}
-% We also redefined |\section| and |\subsection| commands:
+% \begin{macro}{\subsection}
+% We also redefine the |\section| and |\subsection| commands:
 %    \begin{macrocode}
 \makeatletter
 \ifcrumbs@dry%
@@ -291,8 +303,9 @@ Hello, world!
     \crumbs@oldsubsection{#2}%
   }
 \fi
-\makeatletter
+\makeatother
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 
 % \begin{macro}{\crumb}
@@ -317,13 +330,22 @@ Hello, world!
 %    \end{macrocode}
 % \end{macro}
 
-% \begin{macro}{crumbi}
-% We also define a few counters:
+% \begin{macro}{\crumbs}
+% The command |\crumbs| stays empty until the |jobname.crumbs| file
+% populates it:
 %    \begin{macrocode}
 \newcommand*\crumbs{}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{crumbi}
+% \begin{macro}{subcrumbi}
+% We also define two counters:
+%    \begin{macrocode}
 \newcounter{crumbi}
 \newcounter{subcrumbi}
 %    \end{macrocode}
+% \end{macro}
 % \end{macro}
 
 % Finally, we load the file into the document:
