@@ -1,0 +1,14 @@
+% SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
+% SPDX-License-Identifier: MIT
+
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{crumbs}
+\begin{document}
+\START
+
+\renewcommand\addcontentsline[3]{\TYPE{#1/#2=#3}}
+\section[Short]{Long Title}
+\subsection[Sub]{Long Subtitle}
+
+\END

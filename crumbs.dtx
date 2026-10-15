@@ -123,7 +123,8 @@ Some other text here.
 % respectively. The second is their mandatory argument, namely the full
 % text of the section or subsection.
 % Within the |crumbs| package, |\section| and |\subsection| accept an
-% optional argument that is reused in the crumbs, for example:
+% optional argument that is reused in the crumbs and still reaches
+% the table of contents and the running head as usual, for example:
 %\iffalse
 %<*verb>
 %\fi
@@ -137,6 +138,7 @@ Some other text here.
 % The starred forms |\section*{}| and |\subsection*{}| are passed
 % through untouched and produce no crumbs.
 % \changes{v0.4.2}{2026/10/15}{Starred sections and subsections are passed through untouched instead of becoming a crumb titled with an asterisk.}
+% \changes{v0.4.2}{2026/10/15}{The optional argument of \texttt{\char`\\section} and \texttt{\char`\\subsection} is forwarded to the original commands, so the table of contents and the running head receive the short title again.}
 
 % \section{Package Options}
 
@@ -296,16 +298,20 @@ Hello, world!
   \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
 \else%
   \NewCommandCopy\crumbs@oldsection\section
-  \RenewDocumentCommand\section{s O{} m}{%
+  \RenewDocumentCommand\section{s o m}{%
     \IfBooleanTF{#1}%
       {\crumbs@oldsection*{#3}}%
-      {\crumbection[#2]{#3}\crumbs@oldsection{#3}}%
+      {\IfValueTF{#2}%
+        {\crumbection[#2]{#3}\crumbs@oldsection[#2]{#3}}%
+        {\crumbection{#3}\crumbs@oldsection{#3}}}%
   }
   \NewCommandCopy\crumbs@oldsubsection\subsection
-  \RenewDocumentCommand\subsection{s O{} m}{%
+  \RenewDocumentCommand\subsection{s o m}{%
     \IfBooleanTF{#1}%
       {\crumbs@oldsubsection*{#3}}%
-      {\subcrumbection[#2]{#3}\crumbs@oldsubsection{#3}}%
+      {\IfValueTF{#2}%
+        {\subcrumbection[#2]{#3}\crumbs@oldsubsection[#2]{#3}}%
+        {\subcrumbection{#3}\crumbs@oldsubsection{#3}}}%
   }
 \fi
 \makeatother
