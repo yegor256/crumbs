@@ -1,0 +1,17 @@
+% SPDX-FileCopyrightText: Copyright (c) 2021-2026 Yegor Bugayenko
+% SPDX-License-Identifier: MIT
+
+\input{regression-test.tex}
+\documentclass{article}
+\usepackage{crumbs}
+\begin{document}
+\START
+
+\ifx\crumbs\empty
+  \section{One}
+\else
+  \section{Two}
+\fi
+\TYPE{crumbs=\meaning\crumbs}
+
+\END

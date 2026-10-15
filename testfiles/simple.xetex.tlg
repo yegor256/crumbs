@@ -1,8 +1,4 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
-(simple.crumbs)
-(simple.crumbs)
-(simple.crumbs)
-(simple.crumbs)
-(simple.crumbs)
-(simple.crumbs)
+crumbs=macro:->\setcounter {crumbi}{0}\stepcounter {crumbi}\crumb {Introduction}{Introduction}\stepcounter {crumbi}\crumb {Intro}{Introduction}\stepcounter {crumbi}\crumb {Overview}{Overview}\stepcounter {crumbi}\crumb {Foo}{Foo}\stepcounter {crumbi}\crumb {Foo}{Foo}
+subcrumbs=macro:->\setcounter {subcrumbi}{0}\stepcounter {subcrumbi}\subcrumb {Bar}{ Bar}\stepcounter {subcrumbi}\subcrumb { Bar}{ Bar}

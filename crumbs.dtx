@@ -179,13 +179,16 @@ Hello, world!
 
 % \section{How It Works}
 
-% On the first compilation, a new file |jobname.crumbs| is generated,
-% in which all |\section| and |\subsection| commands are logged.
+% On every compilation, the file |jobname.crumbs| is written afresh,
+% with one line for each |\section| and |\subsection| command.
 
-% On the second compilation, this file is loaded and it populates
-% the |\crumbs| command with a collection of |\crumb{}| invocations,
-% together with one command per section that aggregates its
-% |\subcrumb{}| invocations and is printed by |\subcrumbs|.
+% At the beginning of the next compilation, this file is loaded and
+% it populates the |\crumbs| command with a collection of |\crumb{}|
+% invocations, together with one command per section that aggregates
+% its |\subcrumb{}| invocations and is printed by |\subcrumbs|.
+% The trail therefore always reflects the previous run, just like
+% a table of contents does.
+% \changes{v0.4.2}{2026/10/15}{The crumbs file is rewritten on every run, so sections added or renamed after the first compilation reach the trail without deleting the file by hand.}
 
 % \StopEventually{}
 
@@ -207,9 +210,9 @@ Hello, world!
 %    \end{macrocode}
 
 % \begin{macro}{\crumbs@back}
-% The |\crumbs| command is implemented with the help of the |catchfile|
-% package. We define a special command for the backslash character
-% inside the |jobname.crumbs| file, as suggested \href{https://tex.stackexchange.com/a/12414/1449}{here}:
+% The |\crumbs| command is populated from the |jobname.crumbs| file.
+% We define a special command for the backslash character
+% inside that file, as suggested \href{https://tex.stackexchange.com/a/12414/1449}{here}:
 %    \begin{macrocode}
 \makeatletter
 \newcommand\crumbs@back{\@backslashchar}
@@ -218,20 +221,13 @@ Hello, world!
 % \end{macro}
 
 % \begin{macro}{\appendtofile}
-% Then, we define a new command |\appendtofile|:
+% Then, we define a new command |\appendtofile|, which writes one
+% purified line to the stream that stays open for the whole run:
 %    \begin{macrocode}
-\RequirePackage{catchfile}
-  \newwrite\appendwrite
-  \ExplSyntaxOn\cs_new:Npn\appendtofile#1#2{%
-    \begingroup
-    \IfFileExists{#1}%
-      {\CatchFileDef{\filecontent}{#1}{\endlinechar=`^^J\catcode\endlinechar=12\relax}}% keep existing end-of-lines
-      {\let\filecontent\empty}%
-    \immediate\openout\appendwrite=#1\relax
-    \immediate\write\appendwrite{\unexpanded\expandafter{\filecontent} \text_purify:n{#2}}%
-    \immediate\closeout\appendwrite
-    \endgroup
-  }\ExplSyntaxOff
+\newwrite\appendwrite
+\ExplSyntaxOn
+\cs_new:Npn\appendtofile#1{\immediate\write\appendwrite{\text_purify:n{#1}}}
+\ExplSyntaxOff
 %    \end{macrocode}
 % \end{macro}
 
@@ -254,14 +250,12 @@ Hello, world!
 \makeatletter
 \newcommand\crumbection[2][]{%
   \def\temp{#1}%
-  \ifx\crumbs\empty%
-    \appendtofile{\jobname.crumbs}{%
-      \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
-        \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back setcounter\{crumbi\}\{0\}\}%
-      \crumbs@back fi%
-      \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
-    }%
-  \fi%
+  \appendtofile{%
+    \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
+      \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back setcounter\{crumbi\}\{0\}\}%
+    \crumbs@back fi%
+    \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+  }%
   \ifcrumbs@increment\stepcounter{section}\fi%
 }
 \makeatother
@@ -278,18 +272,16 @@ Hello, world!
     \PackageError{crumbs}{A subcrumb needs a section, but the section counter is zero}{Put \string\section\space or \string\crumbection\space before \string\subsection\space or \string\subcrumbection}%
   \else%
     \def\temp{#1}%
-    \ifx\crumbs\empty%
-      \appendtofile{\jobname.crumbs}{%
-        \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
-          \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-            \crumbs@back setcounter\{subcrumbi\}\{0\}%
-          \}%
-        \crumbs@back fi%
-        \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-          \crumbs@back stepcounter\{subcrumbi\}%
-          \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
-      }%
-    \fi%
+    \appendtofile{%
+      \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
+        \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+          \crumbs@back setcounter\{subcrumbi\}\{0\}%
+        \}%
+      \crumbs@back fi%
+      \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+        \crumbs@back stepcounter\{subcrumbi\}%
+        \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+    }%
     \ifcrumbs@increment\stepcounter{subsection}\fi%
   \fi%
 }
@@ -367,9 +359,15 @@ Hello, world!
 % \end{macro}
 % \end{macro}
 
-% Finally, we load the file into the document:
+% Finally, at the beginning of the document we load the file written
+% by the previous run and then open it for writing again, so that
+% every run produces a fresh one:
 %    \begin{macrocode}
-\AtBeginDocument{\IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}}
+\AtBeginDocument{%
+  \IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}%
+  \immediate\openout\appendwrite=\jobname.crumbs\relax%
+}
+\AtEndDocument{\immediate\closeout\appendwrite}
 %    \end{macrocode}
 
 % \Finale

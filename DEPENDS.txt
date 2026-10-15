@@ -1,4 +1,3 @@
-hard catchfile
 hard etoolbox
 soft bookmark
 soft fail-fast

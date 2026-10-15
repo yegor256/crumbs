@@ -9,7 +9,6 @@
 
 \section*{Unnumbered}
 \section{Numbered}
-\input{\jobname.crumbs}
 \TYPE{section=\thesection}
 \TYPE{crumbs=\meaning\crumbs}
 
