@@ -132,6 +132,9 @@ Some other text here.
 %\iffalse
 %</verb>
 %\fi
+% The starred forms |\section*{}| and |\subsection*{}| are passed
+% through untouched and produce no crumbs.
+% \changes{v0.4.2}{2026/10/15}{Starred sections and subsections are passed through untouched instead of becoming a crumb titled with an asterisk.}
 
 % \section{Package Options}
 
@@ -281,14 +284,16 @@ Hello, world!
   \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
 \else%
   \NewCommandCopy\crumbs@oldsection\section
-  \renewcommand\section[2][]{%
-    \crumbection[#1]{#2}%
-    \crumbs@oldsection{#2}%
+  \RenewDocumentCommand\section{s O{} m}{%
+    \IfBooleanTF{#1}%
+      {\crumbs@oldsection*{#3}}%
+      {\crumbection[#2]{#3}\crumbs@oldsection{#3}}%
   }
   \NewCommandCopy\crumbs@oldsubsection\subsection
-  \renewcommand\subsection[2][]{%
-    \subcrumbection[#1]{#2}%
-    \crumbs@oldsubsection{#2}%
+  \RenewDocumentCommand\subsection{s O{} m}{%
+    \IfBooleanTF{#1}%
+      {\crumbs@oldsubsection*{#3}}%
+      {\subcrumbection[#2]{#3}\crumbs@oldsubsection{#3}}%
   }
 \fi
 \makeatletter
