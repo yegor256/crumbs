@@ -31,7 +31,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crumbs}
-[2026-10-15 14.12.21 Navigation Crumbs for Presentations]
+[2026-10-15 14.34.28 Navigation Crumbs for Presentations]
 
 
 
@@ -46,12 +46,13 @@
 
 
 
-\RequirePackage{xkeyval}
 \RequirePackage{etoolbox}
-\makeatletter\newif\ifcrumbs@dry\makeatother
-\makeatletter\DeclareOption{dry}{\crumbs@drytrue}\makeatother
-\makeatletter\newif\ifcrumbs@increment\makeatother
-\makeatletter\DeclareOption{increment}{\crumbs@incrementtrue}\makeatother
+\makeatletter
+\newif\ifcrumbs@dry
+\DeclareOption{dry}{\crumbs@drytrue}
+\newif\ifcrumbs@increment
+\DeclareOption{increment}{\crumbs@incrementtrue}
+\makeatother
 \ProcessOptions\relax
 
 \makeatletter
@@ -128,7 +129,7 @@
     \crumbs@oldsubsection{#2}%
   }
 \fi
-\makeatletter
+\makeatother
 
 \ifcsname crumb\endcsname%
   \message{The command "crumb" is already defined}%
@@ -143,6 +144,7 @@
 \fi%
 
 \newcommand*\crumbs{}
+
 \newcounter{crumbi}
 \newcounter{subcrumbi}
 
