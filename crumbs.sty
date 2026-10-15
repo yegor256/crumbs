@@ -31,7 +31,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crumbs}
-[2026-10-15 14.34.28 Navigation Crumbs for Presentations]
+[2026-10-15 14.34.52 Navigation Crumbs for Presentations]
 
 
 
@@ -119,14 +119,16 @@
   \message{Since "dry" mode is ON we don't renew "section" and "subsection" commands}%
 \else%
   \NewCommandCopy\crumbs@oldsection\section
-  \renewcommand\section[2][]{%
-    \crumbection[#1]{#2}%
-    \crumbs@oldsection{#2}%
+  \RenewDocumentCommand\section{s O{} m}{%
+    \IfBooleanTF{#1}%
+      {\crumbs@oldsection*{#3}}%
+      {\crumbection[#2]{#3}\crumbs@oldsection{#3}}%
   }
   \NewCommandCopy\crumbs@oldsubsection\subsection
-  \renewcommand\subsection[2][]{%
-    \subcrumbection[#1]{#2}%
-    \crumbs@oldsubsection{#2}%
+  \RenewDocumentCommand\subsection{s O{} m}{%
+    \IfBooleanTF{#1}%
+      {\crumbs@oldsubsection*{#3}}%
+      {\subcrumbection[#2]{#3}\crumbs@oldsubsection{#3}}%
   }
 \fi
 \makeatother
