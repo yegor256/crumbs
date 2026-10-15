@@ -31,7 +31,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crumbs}
-[2026-10-15 14.43.48 Navigation Crumbs for Presentations]
+[2026-10-15 14.51.25 Navigation Crumbs for Presentations]
 
 
 
@@ -59,18 +59,10 @@
 \newcommand\crumbs@back{\@backslashchar}
 \makeatother
 
-\RequirePackage{catchfile}
-  \newwrite\appendwrite
-  \ExplSyntaxOn\cs_new:Npn\appendtofile#1#2{%
-    \begingroup
-    \IfFileExists{#1}%
-      {\CatchFileDef{\filecontent}{#1}{\endlinechar=`^^J\catcode\endlinechar=12\relax}}% keep existing end-of-lines
-      {\let\filecontent\empty}%
-    \immediate\openout\appendwrite=#1\relax
-    \immediate\write\appendwrite{\unexpanded\expandafter{\filecontent} \text_purify:n{#2}}%
-    \immediate\closeout\appendwrite
-    \endgroup
-  }\ExplSyntaxOff
+\newwrite\appendwrite
+\ExplSyntaxOn
+\cs_new:Npn\appendtofile#1{\immediate\write\appendwrite{\text_purify:n{#1}}}
+\ExplSyntaxOff
 
 \newcommand\subcrumbs{%
   \ifnum\value{section}=0\else%
@@ -83,14 +75,12 @@
 \makeatletter
 \newcommand\crumbection[2][]{%
   \def\temp{#1}%
-  \ifx\crumbs\empty%
-    \appendtofile{\jobname.crumbs}{%
-      \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
-        \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back setcounter\{crumbi\}\{0\}\}%
-      \crumbs@back fi%
-      \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
-    }%
-  \fi%
+  \appendtofile{%
+    \crumbs@back ifx\crumbs@back crumbs\crumbs@back empty%
+      \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back setcounter\{crumbi\}\{0\}\}%
+    \crumbs@back fi%
+    \crumbs@back gappto\crumbs@back crumbs\{\crumbs@back stepcounter\{crumbi\}\crumbs@back crumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+  }%
   \ifcrumbs@increment\stepcounter{section}\fi%
 }
 \makeatother
@@ -101,18 +91,16 @@
     \PackageError{crumbs}{A subcrumb needs a section, but the section counter is zero}{Put \string\section\space or \string\crumbection\space before \string\subsection\space or \string\subcrumbection}%
   \else%
     \def\temp{#1}%
-    \ifx\crumbs\empty%
-      \appendtofile{\jobname.crumbs}{%
-        \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
-          \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-            \crumbs@back setcounter\{subcrumbi\}\{0\}%
-          \}%
-        \crumbs@back fi%
-        \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-          \crumbs@back stepcounter\{subcrumbi\}%
-          \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
-      }%
-    \fi%
+    \appendtofile{%
+      \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
+        \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+          \crumbs@back setcounter\{subcrumbi\}\{0\}%
+        \}%
+      \crumbs@back fi%
+      \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+        \crumbs@back stepcounter\{subcrumbi\}%
+        \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+    }%
     \ifcrumbs@increment\stepcounter{subsection}\fi%
   \fi%
 }
@@ -158,7 +146,11 @@
 \newcounter{crumbi}
 \newcounter{subcrumbi}
 
-\AtBeginDocument{\IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}}
+\AtBeginDocument{%
+  \IfFileExists{\jobname.crumbs}{\input{\jobname.crumbs}}{}%
+  \immediate\openout\appendwrite=\jobname.crumbs\relax%
+}
+\AtEndDocument{\immediate\closeout\appendwrite}
 
 
 \endinput
