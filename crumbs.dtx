@@ -137,8 +137,11 @@ Some other text here.
 %\fi
 % The starred forms |\section*{}| and |\subsection*{}| are passed
 % through untouched and produce no crumbs.
+% A |\subsection{}| that precedes the first |\section{}| raises an error,
+% since its subcrumbs would have no section to belong to.
 % \changes{v0.4.2}{2026/10/15}{Starred sections and subsections are passed through untouched instead of becoming a crumb titled with an asterisk.}
 % \changes{v0.4.2}{2026/10/15}{The optional argument of \texttt{\char`\\section} and \texttt{\char`\\subsection} is forwarded to the original commands, so the table of contents and the running head receive the short title again.}
+% \changes{v0.4.2}{2026/10/15}{A subsection before the first section raises an error instead of silently appending its subcrumb to the top-level trail.}
 
 % \section{Package Options}
 
@@ -266,24 +269,29 @@ Hello, world!
 % \end{macro}
 
 % \begin{macro}{\subcrumbection}
-% The command |\subcrumbection| registers a new subcrumb:
+% The command |\subcrumbection| registers a new subcrumb, refusing
+% to do so before the first section:
 %    \begin{macrocode}
 \makeatletter
 \newcommand\subcrumbection[2][]{%
-  \def\temp{#1}%
-  \ifx\crumbs\empty%
-    \appendtofile{\jobname.crumbs}{%
-      \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
-        \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-          \crumbs@back setcounter\{subcrumbi\}\{0\}%
-        \}%
-      \crumbs@back fi%
-      \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-        \crumbs@back stepcounter\{subcrumbi\}%
-        \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
-    }%
+  \ifnum\value{section}=0%
+    \PackageError{crumbs}{A subcrumb needs a section, but the section counter is zero}{Put \string\section\space or \string\crumbection\space before \string\subsection\space or \string\subcrumbection}%
+  \else%
+    \def\temp{#1}%
+    \ifx\crumbs\empty%
+      \appendtofile{\jobname.crumbs}{%
+        \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
+          \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+            \crumbs@back setcounter\{subcrumbi\}\{0\}%
+          \}%
+        \crumbs@back fi%
+        \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+          \crumbs@back stepcounter\{subcrumbi\}%
+          \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+      }%
+    \fi%
+    \ifcrumbs@increment\stepcounter{subsection}\fi%
   \fi%
-  \ifcrumbs@increment\stepcounter{subsection}\fi%
 }
 \makeatother
 %    \end{macrocode}
