@@ -31,7 +31,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{crumbs}
-[2026-10-15 14.38.36 Navigation Crumbs for Presentations]
+[2026-10-15 14.43.48 Navigation Crumbs for Presentations]
 
 
 
@@ -97,20 +97,24 @@
 
 \makeatletter
 \newcommand\subcrumbection[2][]{%
-  \def\temp{#1}%
-  \ifx\crumbs\empty%
-    \appendtofile{\jobname.crumbs}{%
-      \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
-        \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-          \crumbs@back setcounter\{subcrumbi\}\{0\}%
-        \}%
-      \crumbs@back fi%
-      \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
-        \crumbs@back stepcounter\{subcrumbi\}%
-        \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
-    }%
+  \ifnum\value{section}=0%
+    \PackageError{crumbs}{A subcrumb needs a section, but the section counter is zero}{Put \string\section\space or \string\crumbection\space before \string\subsection\space or \string\subcrumbection}%
+  \else%
+    \def\temp{#1}%
+    \ifx\crumbs\empty%
+      \appendtofile{\jobname.crumbs}{%
+        \crumbs@back ifcsname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\crumbs@back else
+          \crumbs@back expandafter\crumbs@back newcommand\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+            \crumbs@back setcounter\{subcrumbi\}\{0\}%
+          \}%
+        \crumbs@back fi%
+        \crumbs@back expandafter\crumbs@back gappto\crumbs@back csname crumbs\romannumeral\the\value{section}\crumbs@back endcsname\{%
+          \crumbs@back stepcounter\{subcrumbi\}%
+          \crumbs@back subcrumb{\ifx\temp\empty \{#2\}\else \{#1\}\fi}{\{#2\}}\}%
+      }%
+    \fi%
+    \ifcrumbs@increment\stepcounter{subsection}\fi%
   \fi%
-  \ifcrumbs@increment\stepcounter{subsection}\fi%
 }
 \makeatother
 
