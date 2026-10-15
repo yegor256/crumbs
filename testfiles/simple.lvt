@@ -17,5 +17,7 @@
 Hello, world!
 \crumbs
 \subcrumbs
+\TYPE{crumbs=\meaning\crumbs}
+\TYPE{subcrumbs=\meaning\crumbsiii}
 
 \END

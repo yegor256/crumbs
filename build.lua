@@ -7,6 +7,7 @@ typesetopts = "-interaction=batchmode -shell-escape -halt-on-error"
 checkopts = "-interaction=batchmode -shell-escape -halt-on-error"
 tagfiles = {"build.lua", "crumbs.dtx"}
 dynamicfiles = {"*.crumbs"}
+checkruns = 3
 
 uploadconfig = {
   pkg = "crumbs",
